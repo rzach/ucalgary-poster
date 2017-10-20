@@ -12,4 +12,10 @@ the bottom of the poster (for sponsor logos, etc.), and a
 you've changed the poster size with `\geometry`, if the poster sizes
 provided by `tikzposter` are not suitable.
 
-`issotl-poster.tex` is an example.
+`issotl-poster.tex` is an example. You'll need to get the sponsor logos
+from somewhere else. Try to get a PDF, or EPS and convert to PDF (e.g., 
+run through [`epstopdf`](https://ctan.org/pkg/epstopdf?lang=en)). You 
+can request department lockups and wordmarks from 
+[UCalgary Brand](https://www.ucalgary.ca/brand/logos/request). NSERC logo
+[here](http://www.nserc-crsng.gc.ca/NSERC-CRSNG/VisualIdentity-IdentiteVisuelle_eng.asp)
+and SSHRC [here](http://www.sshrc-crsh.gc.ca/about-au_sujet/sshrc-logo-crsh/index-eng.aspx).
