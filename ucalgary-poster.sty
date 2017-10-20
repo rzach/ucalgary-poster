@@ -1,11 +1,18 @@
 % ucalgary-poster.sty
 % provides University of Calgary branding for tikzposter
 % https://ctan.org/pkg/tikzposter?lang=en
+%
+% Richard Zach
+% rzach@ucalgary.ca
+% Source/most recent version at https://github.com/rzach/ucalgary-poster
+
 
 % tikzposter loads the geometry package, so you can use \geometry to
 % set an arbitrary size. But tikzposter computes dimension when the
 % class loads, so won't be aware if you change the size later. Use
 % \tpsetpostersize after \geometry
+
+\ProvidesPackage{ucalgary-poster}[2017/10/20 University of Calgary tikzposter theme]
 
 \newcommand{\tpsetpostersize}{%
 \setlength{\TP@visibletextwidth}{\textwidth-2\TP@innermargin}
