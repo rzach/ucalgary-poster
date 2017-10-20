@@ -1,0 +1,181 @@
+% ucalgary-poster.sty
+% provides University of Calgary branding for tikzposter
+% https://ctan.org/pkg/tikzposter?lang=en
+
+% tikzposter loads the geometry package, so you can use \geometry to
+% set an arbitrary size. But tikzposter computes dimension when the
+% class loads, so won't be aware if you change the size later. Use
+% \tpsetpostersize after \geometry
+
+\newcommand{\tpsetpostersize}{%
+\setlength{\TP@visibletextwidth}{\textwidth-2\TP@innermargin}
+\setlength{\TP@visibletextheight}{\textheight-2\TP@innermargin}
+}
+
+% turn off TikZposter logo
+\tikzposterlatexaffectionproofoff
+
+% use a nice sans-serif typeface close to Verdana; Arev is a free
+% Bitstream Vera with math support.
+\usepackage{arev}
+
+% redefine \title command to set title in uppercase
+\def\title#1{\gdef\@title{\scalebox{\TP@titletextscale}{\uppercase{#1}}}}
+
+% use the white vertical UCalgary logo
+\titlegraphic{\includegraphics[width=.1\textwidth]{uc-vert-cmyk-white-text.pdf}}
+
+% define a block style with simple square corners and thin borders
+\defineblockstyle{Square}{
+  titlewidthscale=1, bodywidthscale=1, titlecenter=false,
+  titleoffsetx=0pt, titleoffsety=0pt, bodyoffsetx=0pt, bodyoffsety=0pt,
+  bodyverticalshift=0pt, roundedcorners=0, linewidth=3pt,
+  titleinnersep=.5cm, bodyinnersep=.5cm
+}{
+  \begin{scope}[line width=\blocklinewidth, rounded corners=\blockroundedcorners]
+    \ifBlockHasTitle %
+    \draw[color=blocktitlebgcolor, fill=blocktitlebgcolor] (blockbody.south west) rectangle (blocktitle.north east);
+    \draw[color=blocktitlebgcolor, fill=blockbodybgcolor] (blockbody.south west) rectangle (blockbody.north east);
+    \else
+    \draw[color=blocktitlebgcolor, fill=blockbodybgcolor] (blockbody.south west) rectangle (blockbody.north east);
+    \fi
+  \end{scope}
+}
+
+% define a color style with UCalgary as per
+% https://www.ucalgary.ca/brand/identity-standards
+\definecolorstyle{UCalgary} {
+\definecolor{colorOne}{RGB}{227,39,38} % UCalgary primary red
+\definecolor{colorTwo}{RGB}{181,190,53} % UCalgary accent green
+\definecolor{colorThree}{RGB}{205,206,198} % UCalgary warm grey
+}{
+% Background Colors
+\colorlet{backgroundcolor}{white}
+\colorlet{framecolor}{colorThree}
+% Title Colors
+\colorlet{titlefgcolor}{white}
+\colorlet{titlebgcolor}{colorOne}
+% Block Colors
+\colorlet{blocktitlebgcolor}{colorThree}
+\colorlet{blocktitlefgcolor}{black}
+\colorlet{blockbodybgcolor}{white}
+\colorlet{blockbodyfgcolor}{black}
+% Innerblock Colors
+\colorlet{innerblocktitlebgcolor}{white}
+\colorlet{innerblocktitlefgcolor}{black}
+\colorlet{innerblockbodybgcolor}{colorThree!30!white}
+\colorlet{innerblockbodyfgcolor}{black}
+% Note colors
+\colorlet{notefgcolor}{black}
+\colorlet{notebgcolor}{colorTwo}
+\colorlet{noteframecolor}{black}
+% Footer background
+\colorlet{footerbgcolor}{colorThree}
+}
+
+% make the title flush left with the logo more-or-less flush right
+
+\settitle{%
+  \begin{minipage}[b]{.8\textwidth}
+    \color{titlefgcolor}
+    \bfseries
+    {\Huge \@title\par}
+    \vspace*{1em}
+    {\huge \@author \par}
+    \vspace*{1em}
+    {\LARGE \@institute}
+  \end{minipage}
+  \hspace*{.09\textwidth}
+  \begin{minipage}[b]{.8\textwidth}
+    \@titlegraphic
+  \end{minipage}
+}
+
+% Teach tikzposter to do a footer
+
+% Dimensions we need for the footer
+
+% Width, height, distance to content, distance to bottom edge
+\newdimen\footerwidth
+\newdimen\footerheight
+\newdimen\footerinnersep
+\newdimen\footertobottomverticalspace
+% Actual positions of footer
+\newdimen\footerposleft
+\newdimen\footerposright
+\newdimen\footerpostop
+\newdimen\footerposbottom
+
+% Footer styles
+\gdef\definefooterstyle#1#2#3{
+  \expandafter\gdef\csname TP@footerstyle#1Defaultvalues\endcsname{\gpresetkeys{footer}{#2}{}}
+  \expandafter\gdef\csname TP@footerstyle#1\endcsname{#3}
+}
+
+% Keys to use with footer
+\define@key{footer}{width}{\footerwidth=#1}
+\define@key{footer}{height}{\footerheight=#1}
+\define@key{footer}{roundedcorners}{\gdef\footerroundedcorners{#1}}
+\define@key{footer}{innersep}{\footerinnersep=#1}
+\define@key{footer}{footertobottomverticalspace}
+           {\footertobottomverticalspace=#1}
+
+\newcommand\usefooterstyle[2][]{
+  \ifcsname TP@footerstyle#2\endcsname
+    \csname TP@footerstyle#2Defaultvalues\endcsname\gpresetkeys{footer}{#1}{} % call macro
+    \gdef\TP@footerstyle{\csname TP@footerstyle#2\endcsname} % save macro
+  \else
+    \PackageWarning{tikzposter}{Unknown footerstyle `#2'.}
+  \fi
+}
+
+% \footer makes the footer
+% optional argument takes the keyvals
+% mandatory argument is footer content
+
+\newcommand{\footer}[2][]{% #1 keys
+    \normalsize
+    \setkeys{footer}{#1}
+
+    % Compute footer position
+    \setlength{\footerposleft}{-0.5\footerwidth}
+    \setlength{\footerposright}{\footerposleft+\footerwidth}
+    \setlength{\footerposbottom}{-0.5\paperheight+\footertobottomverticalspace}
+    \setlength{\footerpostop}{\footerposbottom+\footerheight}
+
+    % Footer style (background)
+    \TP@footerstyle
+
+    % Footer node
+    \node[inner sep=\footerinnersep,
+      anchor=north,
+      minimum width=\TP@visibletextwidth-2\footerinnersep]
+    at (0,\footerpostop) {\parbox{\footerwidth-2\footerinnersep}{#2}};
+}
+
+% Define a Filled footer style to match Filled header style
+
+\definefooterstyle{Filled}{
+  width=\textwidth,
+  height=.05\paperheight,
+  roundedcorners=0,
+  innersep=1.5cm,
+  footertobottomverticalspace=0cm
+}{
+   \draw[draw=none, fill=footerbgcolor]%
+   (\footerposleft,\footerposbottom) rectangle (\footerposright,\footerpostop);
+}
+
+% Put everything into a theme
+
+\definelayouttheme{UCalgary}{
+  \usebackgroundstyle{Empty}
+  \usetitlestyle{Filled}
+  \useblockstyle{Square}
+  \usecolorstyle{UCalgary}
+  \usenotestyle{Sticky}
+  \usefooterstyle{Filled}
+}
+
+% Load the UCalgary theme
+\usetheme{UCalgary}
