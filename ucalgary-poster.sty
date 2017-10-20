@@ -6,13 +6,12 @@
 % rzach@ucalgary.ca
 % Source/most recent version at https://github.com/rzach/ucalgary-poster
 
+\ProvidesPackage{ucalgary-poster}[2017/10/20 University of Calgary tikzposter theme]
 
 % tikzposter loads the geometry package, so you can use \geometry to
 % set an arbitrary size. But tikzposter computes dimension when the
 % class loads, so won't be aware if you change the size later. Use
 % \tpsetpostersize after \geometry
-
-\ProvidesPackage{ucalgary-poster}[2017/10/20 University of Calgary tikzposter theme]
 
 \newcommand{\tpsetpostersize}{%
 \setlength{\TP@visibletextwidth}{\textwidth-2\TP@innermargin}
@@ -29,7 +28,7 @@
 % redefine \title command to set title in uppercase
 \def\title#1{\gdef\@title{\scalebox{\TP@titletextscale}{\uppercase{#1}}}}
 
-% use the white vertical UCalgary logo
+% use the vertical UCalgary logo with white wordmark
 \titlegraphic{\includegraphics[width=.1\textwidth]{uc-vert-cmyk-white-text.pdf}}
 
 % define a block style with simple square corners and thin borders
@@ -76,8 +75,9 @@
 \colorlet{notefgcolor}{black}
 \colorlet{notebgcolor}{colorTwo}
 \colorlet{noteframecolor}{black}
-% Footer background
+% Footer colors
 \colorlet{footerbgcolor}{colorThree}
+\colorlet{footerfgcolor}{black}
 }
 
 % make the title flush left with the logo more-or-less flush right
@@ -156,14 +156,15 @@
     % Footer node
     \node[inner sep=\footerinnersep,
       anchor=north,
-      minimum width=\TP@visibletextwidth-2\footerinnersep]
-    at (0,\footerpostop) {\parbox{\footerwidth-2\footerinnersep}{#2}};
+      minimum width=\footerwidth-2\footerinnersep]
+    at (0,\footerpostop) {
+      \parbox{\footerwidth-2\footerinnersep}{\color{footerfgcolor}#2}};
 }
 
 % Define a Filled footer style to match Filled header style
 
 \definefooterstyle{Filled}{
-  width=\textwidth,
+  width=\paperwidth,
   height=.05\paperheight,
   roundedcorners=0,
   innersep=1.5cm,
